@@ -42,7 +42,7 @@ public class MachineController {
 
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveValues(@Valid @RequestBody MachineRequest request) {
+    public void saveMachineParameters(@Valid @RequestBody MachineRequest request) {
         machineService.save(request);
     }
 
@@ -55,11 +55,11 @@ public class MachineController {
 
     @GetMapping(value = "/stats")
     public ResponseEntity<Page<MachineStat>> getMachinesStats(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                                                                @RequestParam(value = "count", defaultValue = "10", required = false) int size,
-                                                                @RequestParam(value = "order", defaultValue = "DESC", required = false) Sort.Direction direction,
-                                                                @RequestParam(value = "sort", defaultValue = "createdAt", required = false) String sortProperty,
-                                                                @RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
-                                                                @RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
+                                                              @RequestParam(value = "count", defaultValue = "10", required = false) int size,
+                                                              @RequestParam(value = "order", defaultValue = "DESC", required = false) Sort.Direction direction,
+                                                              @RequestParam(value = "sort", defaultValue = "createdAt", required = false) String sortProperty,
+                                                              @RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+                                                              @RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
         PageRequest pageRequest = PageRequest.of(page, size, direction, sortProperty);
         return ResponseEntity.ok(machineService.getMachineStats(pageRequest, startDateTime, endDateTime));
     }
