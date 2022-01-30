@@ -13,22 +13,25 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="parameter_id" type="BIGINT">
+            <column name="key" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="value" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
+            <column name="machine_key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="now()">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="parameter_value"
-                                 baseColumnNames="parameter_id"
-                                 referencedTableName="parameter"
-                                 referencedColumnNames="id"
-                                 constraintName="fk_parameter_value"/>
+                                 baseColumnNames="machine_key"
+                                 referencedTableName="machine"
+                                 referencedColumnNames="key"
+                                 constraintName="fk_machine"/>
     </changeSet>
 
 </databaseChangeLog>

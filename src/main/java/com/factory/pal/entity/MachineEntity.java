@@ -1,5 +1,8 @@
 package com.factory.pal.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity(name = "machine")
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MachineEntity implements Serializable {
 
     private static final long serialVersionUID = 1481959712381175988L;
@@ -25,8 +29,10 @@ public class MachineEntity implements Serializable {
 
     private LocalDateTime createdAt;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "machineEntity", cascade = CascadeType.ALL)
-    List<ParameterEntity> parameterEntities;
+    @OrderBy("created_at desc")
+    List<ParameterValueEntity> parameters;
 
     @PrePersist
     private void prePersist() {

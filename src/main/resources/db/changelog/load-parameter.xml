@@ -6,15 +6,13 @@
     <changeSet id="load-parameter-data" author="Oitejjho">
 
         <preConditions onFailMessage="skipping load data, table not empty" onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM parameter</sqlCheck>
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM parameter_value</sqlCheck>
         </preConditions>
 
-        <loadData file="data/parameters.csv" tableName="parameter">
+        <loadData file="data/parameters.csv" tableName="parameter_value">
             <column name="key" type="STRING"/>
+            <column name="value" type="STRING"/>
             <column name="machine_key" type="STRING"/>
-            <column name="name" type="STRING"/>
-            <column name="type" type="STRING"/>
-            <column name="unit" type="STRING"/>
         </loadData>
 
     </changeSet>
