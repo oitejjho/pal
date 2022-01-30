@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
@@ -66,8 +67,8 @@ public class MachineService {
     public Page<MachineEntity> getMachines(Pageable pageable) {
         LOG.info("getting all latest parameter of all machine");
         Page<MachineEntity> machineEntityPage = this.machineEntityRepository.findAll(pageable);
-        List<MachineEntity> machineEntitiesWithLatestParams = machineEntityPage.stream().map(machineEntity -> {
-            List<ParameterValueEntity> latestParameters = machineEntity.getParameters().stream()
+        List<MachineEntity> machineEntitiesWithLatestParams = machineEntityPage.getContent().stream().map(machineEntity -> {
+            List<ParameterValueEntity> latestParameters = Optional.ofNullable(machineEntity.getParameters()).map(Collection::stream).orElse(Stream.empty())
                     .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparing(ParameterValueEntity::getKey))),
                             ArrayList::new));
             machineEntity.setParameters(latestParameters);
@@ -78,12 +79,13 @@ public class MachineService {
         return new PageImpl<>(machineEntitiesWithLatestParams);
     }
 
-    public MachineEntity getMachines(String key) {
+    public MachineEntity getMachine(String key) {
         LOG.info("getting all latest parameter by machine key {}", key);
         MachineEntity machineEntity = this.machineEntityRepository.findByKey(key)
                 .orElseThrow(() -> new MachineKeyInvalidException(ExceptionConstants.MACHINE_KEY_INVALID));
-        List<ParameterValueEntity> latestParameters = machineEntity.getParameters().stream().collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparing(ParameterValueEntity::getKey))),
-                ArrayList::new));
+        List<ParameterValueEntity> latestParameters = Optional.ofNullable(machineEntity.getParameters()).map(Collection::stream).orElse(Stream.empty())
+                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparing(ParameterValueEntity::getKey))),
+                        ArrayList::new));
         machineEntity.setParameters(latestParameters);
         LOG.info("done getting all latest parameter by machine key {}", key);
         return machineEntity;
@@ -104,8 +106,7 @@ public class MachineService {
         LOG.info("getting all stats by machine key {}", key);
         MachineEntity machineEntity = this.machineEntityRepository.findByKey(key)
                 .orElseThrow(() -> new MachineKeyInvalidException(ExceptionConstants.MACHINE_KEY_INVALID));
-        List<ParameterValueEntity> filteredParameters = machineEntity.getParameters()
-                .stream()
+        List<ParameterValueEntity> filteredParameters = Optional.ofNullable(machineEntity.getParameters()).map(Collection::stream).orElse(Stream.empty())
                 .filter(parameterValueEntity -> parameterValueEntity.getCreatedAt().isAfter(startDateTime) && parameterValueEntity.getCreatedAt().isBefore(endDateTime))
                 .collect(Collectors.toList());
         machineEntity.setParameters(filteredParameters);
@@ -115,7 +116,7 @@ public class MachineService {
 
 
     public MachineStat getStatisticsByMachine(MachineEntity machineEntity) {
-        Map<String, List<String>> keyValues = machineEntity.getParameters().stream()
+        Map<String, List<String>> keyValues = Optional.ofNullable(machineEntity.getParameters()).map(Collection::stream).orElse(Stream.empty())
                 .collect(groupingBy(ParameterValueEntity::getKey, mapping(ParameterValueEntity::getValue, toList())));
 
         MachineStat machineStat = new MachineStat();

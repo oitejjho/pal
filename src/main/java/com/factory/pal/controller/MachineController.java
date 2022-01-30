@@ -36,7 +36,7 @@ public class MachineController {
 
     @GetMapping(value = "/{key}")
     public ResponseEntity<MachineEntity> getMachinesByKey(@PathVariable String key) {
-        return ResponseEntity.ok(machineService.getMachines(key));
+        return ResponseEntity.ok(machineService.getMachine(key));
     }
 
 
