@@ -4,7 +4,6 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
 
     <include file="db/changelog/create-machine.xml"/>
-<!--    <include file="db/changelog/create-parameter.xml"/>-->
     <include file="db/changelog/create-parameter-value.xml"/>
     <include file="db/changelog/load-machine.xml"/>
     <include file="db/changelog/load-parameter.xml"/>
