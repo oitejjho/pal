@@ -1,4 +1,4 @@
-package com.factory.pal;
+package com.factory.pal.controller;
 
 import com.factory.pal.controller.MachineController;
 import com.factory.pal.entity.MachineEntity;

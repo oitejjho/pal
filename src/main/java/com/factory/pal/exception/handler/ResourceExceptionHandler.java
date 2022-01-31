@@ -1,6 +1,7 @@
 package com.factory.pal.exception.handler;
 
 import com.factory.pal.exception.MachineKeyInvalidException;
+import com.factory.pal.exception.ParameterValueInvalidException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,14 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {MachineKeyInvalidException.class})
     protected ResponseEntity<Object> handleMachineKeyInvalidException(MachineKeyInvalidException ex, WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(),
+                new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    @ExceptionHandler(value
+            = {ParameterValueInvalidException.class})
+    protected ResponseEntity<Object> handleParameterValueInvalidException(
+            ParameterValueInvalidException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
